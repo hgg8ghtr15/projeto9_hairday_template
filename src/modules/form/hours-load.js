@@ -6,6 +6,9 @@ import { hoursClick } from "./hours-click.js";
 const ul = document.querySelector("#hours")
 
 export function hoursLoad({ date }) {
+
+    // Limpa os horarios 
+    ul.innerHTML  = ""
     const opening = openingHours.map((hour) => {
 
         // recupero a hora
