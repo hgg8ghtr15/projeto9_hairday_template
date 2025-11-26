@@ -11,10 +11,9 @@ export async function schedulesDay() {
     // Busca o agendamento da Api
     const dailySchedules = await scheduleFetchByDay({ date })
 
-    console.log(typeof dailySchedules)
     // Renderiza o agendamentos.
     schedulesShow({ dailySchedules })
 
     // Renderiza os horarios disponiveis para o agendamento
-    hoursLoad({ date })
+    hoursLoad({ date, dailySchedules})
 }

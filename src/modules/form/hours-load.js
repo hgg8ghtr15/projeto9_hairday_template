@@ -3,29 +3,35 @@ import { openingHours } from "../../utils/opening-hours.js";
 import { hoursClick } from "./hours-click.js";
 
 // recupera o elemento de Ul
-const ul = document.querySelector("#hours")
+const hours = document.querySelector("#hours")
 
-export function hoursLoad({ date }) {
-
+export function hoursLoad({ date, dailySchedules }) {
     // Limpa os horarios 
-    ul.innerHTML  = ""
+    hours.innerHTML = ""
+
+    //obtem a lista de ocupado online
+    const unavailableHours = dailySchedules.map((schedule) => (dayjs(schedule.when).format("HH:mm")) )
+    console.log(unavailableHours)
+
     const opening = openingHours.map((hour) => {
 
         // recupero a hora
         const [scheduleHour] = hour.split(":");
 
         // verifico se a hora ja passou
-        const isHourPast = dayjs(date).add(scheduleHour, 'hour').isAfter(dayjs());
+        const isHourPast = dayjs(date).add(scheduleHour, 'hour').isBefore(dayjs());
+        console.log(isHourPast)
 
+        const available = !unavailableHours.includes(hour) && !isHourPast
 
         return {
             hour,
-            availabre: isHourPast,
+            available,
         }
     })
 
 
-    opening.forEach(({ hour, availabre }) => {
+    opening.forEach(({ hour, available }) => {
 
         // cria a linha a ser add
         const li = document.createElement("li")
@@ -34,7 +40,7 @@ export function hoursLoad({ date }) {
         li.classList.add("hour")
 
         //verifica se esta ativa ou inativa
-        if (availabre) {
+        if (available) {
             li.classList.add("hour-available")
         } else {
             li.classList.add("hour-unavailable")
@@ -53,7 +59,7 @@ export function hoursLoad({ date }) {
         }
 
         // Insere na UL a linha
-        ul.append(li)
+        hours.append(li)
 
     })
 
@@ -75,5 +81,5 @@ function hourHeaderAdd(titulo) {
     header.textContent = titulo
 
     // Add a linha no titulo.
-    ul.append(header)
+    hours.append(header)
 }
